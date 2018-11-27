@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "dnsLabelPrefix": {
+      "value": "nutchi"
+    },
+  "adDomainName": {
+      "value": "nutchi.local"
+    },
+  "adVnetName": {
+      "value": "nutchi.local-vnet"
+    },
+  "adVnetRG": {
+      "value": "nutchi.local-rg"
+    },
+  "adSubnetName": {
+      "value": "default"
+    },
+  "adminUsername": {
+      "value": "oaltawil"
+    },
+  "adminPassword": {
+      "value": "8E*8oGNp8tGLypwn"
+    },
+  "imageSKU": {
+      "value": "2016-Datacenter"
+    },
+  "numberOfRdshInstances": {
+      "value": 2
+    },
+  "rdshVmSize": {
+    "value": "Standard_A2_v2"
+    }
+  }
+}
