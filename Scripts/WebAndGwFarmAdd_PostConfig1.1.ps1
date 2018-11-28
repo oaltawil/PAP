@@ -108,8 +108,7 @@ configuration RDGatewaydeployment
         [String]$webAccessServer,
 
         # Gateway external FQDN
-        [String]$externalFqdn,
-        
+        [String]$externalFqdn
       ) 
 
 

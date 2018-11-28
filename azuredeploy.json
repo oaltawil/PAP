@@ -680,6 +680,7 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2018-06-01",
           "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('secondaryGatewayVmName'))]",
             "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'), '/extensions/gateway')]",
             "[concat('Microsoft.Compute/virtualMachines/', variables('brokerVmName'), '/extensions/rdsdeployment')]"
           ],
