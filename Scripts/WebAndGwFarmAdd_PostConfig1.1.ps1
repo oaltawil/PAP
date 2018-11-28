@@ -6,7 +6,7 @@ param
      [String]$Domainname,
      [String]$username,
      [String]$password,
-     [string]$ServerName = "gateway",
+     [string]$ServerName,
      [int]$vmNameStartIndex,
      [int]$numberofwebServers,
      $validationKey64,
@@ -110,16 +110,6 @@ configuration RDGatewaydeployment
         # Gateway external FQDN
         [String]$externalFqdn,
         
-        # RD Session Host count and naming prefix
-        [Int]$numberOfRdshInstances = 1,
-        [String]$sessionHostNamingPrefix = "SessionHost",
-
-        # Collection Name
-        [String]$collectionName,
-
-        # Connection Description
-        [String]$collectionDescription
-
       ) 
 
 
@@ -179,7 +169,7 @@ Write-Host "Username : $($username),   Password: $($password)"
 #$cred = New-Object System.Management.Automation.PSCredential -ArgumentList @($username,(ConvertTo-SecureString -String $password -AsPlainText -Force))
 $webServernameArray = New-Object System.Collections.ArrayList
 
-for ($i = $vmNameStartIndex; $i -le ($numberofwebServers + $vmNameStartIndex); $i++)
+for ($i = $vmNameStartIndex; $i -lt ($numberofwebServers + $vmNameStartIndex); $i++)
 { 
     $webServername = $ServerName + $i.ToString("D2")
     #Write-Host "For $($i), servername = $($webServername)"

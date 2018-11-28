@@ -112,7 +112,6 @@
     "subnet-id": "[concat(resourceId(parameters('existingVnetRG'),'Microsoft.Network/virtualNetworks',parameters('existingVnetName')),'/subnets/',parameters('existingSubnetName'))]",
     "rdshVmName": "[concat(variables('vmPrefix'), 'rdsh-')]",
     "brokerVmName": "[concat(variables('vmPrefix'), 'rdcb-01')]",
-    "BrokerServer": "[concat(variables('brokerVmName'), '.', parameters('existingDomainName'))]",
     "brokerNicName": "[concat(variables('brokerVmName'),variables('networkNameSuffix'))]",
     "gatewayVmName": "[concat(variables('vmPrefix'), 'rdgw-')]",
     "primaryGatewayVmName": "[concat(variables('gatewayVmName'), '01')]",
@@ -651,9 +650,8 @@
           "name": "[concat(variables('secondaryGatewayVmName'), '/gateway')]",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('secondaryGatewayVmName'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', variables('brokerVmName'), '/extensions/rdsdeployment')]"
-          ],
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('secondaryGatewayVmName'))]"
+            ],
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
@@ -684,7 +682,8 @@
           "apiVersion": "2018-06-01",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', variables('secondaryGatewayVMName'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'), '/extensions/gateway')]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'), '/extensions/gateway')]",
+            "[concat('Microsoft.Compute/virtualMachines/', variables('brokerVmName'), '/extensions/rdsdeployment')]"
           ],
           "properties": {
             "publisher": "Microsoft.Compute",
@@ -701,7 +700,7 @@
                 "AdminPassword": "[parameters('existingAdminPassword')]"
               },
               "storageAccountName": "[parameters('storageAccountName')]",
-              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'WebAndGwFarmAdd_PostConfig1.1.ps1',' ','-username \"',parameters('existingAdminUserName'),'\" ', '-password \"',parameters('existingAdminPassword'),'\" ','-BrokerServer \"',variables('BrokerServer'),'\" ','-externalFqdn \"','https://', reference(variables('gatewayIpRef')).dnsSettings.fqdn, '/rdweb','\" ','-Domainname \"',parameters('existingDomainName'),'\" ','-numberofwebServers 1',' -ServerName ', variables('gatewayVmName'), ' -vmNameStartIndex 2')]"
+              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'WebAndGwFarmAdd_PostConfig1.1.ps1',' ','-username \"',parameters('existingAdminUserName'),'\" ', '-password \"',parameters('existingAdminPassword'),'\" ','-BrokerServer \"',variables('brokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"','https://', reference(variables('gatewayIpRef')).dnsSettings.fqdn, '/rdweb','\" ','-Domainname \"',parameters('existingDomainName'),'\" ','-numberofwebServers 1',' -ServerName ', variables('gatewayVmName'), ' -vmNameStartIndex 2')]"
             }
           }
         }
