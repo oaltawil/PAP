@@ -102,7 +102,7 @@
       "metadata": {
         "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
       },
-      "defaultValue": "https://raw.githubusercontent.com/Azure/RDS-Templates/master/rds-deployment-ha-gateway"
+      "defaultValue": "https://raw.githubusercontent.com/oaltawil/PAP/master"
     }
   },
   "variables": {
@@ -652,7 +652,7 @@
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', variables('secondaryGatewayVmName'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', variables('brokerVmName'), '/extensions/', '/rdsdeployment')]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('brokerVmName'), '/extensions/rdsdeployment')]"
           ],
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -684,7 +684,7 @@
           "apiVersion": "2018-06-01",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', variables('secondaryGatewayVMName'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'), '/extensions/','Gateway')]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'), '/extensions/gateway')]"
           ],
           "properties": {
             "publisher": "Microsoft.Compute",
