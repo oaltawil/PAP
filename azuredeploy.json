@@ -520,8 +520,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/availabilitySets', 'cb-availabilityset')]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('brokerNicName'))]",
-        "rdsh-vm-loop"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('brokerNicName'))]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -681,7 +680,6 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2018-06-01",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('secondaryGatewayVMName'))]",
             "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'), '/extensions/gateway')]",
             "[concat('Microsoft.Compute/virtualMachines/', variables('brokerVmName'), '/extensions/rdsdeployment')]"
           ],
