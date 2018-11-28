@@ -45,12 +45,6 @@ configuration RDWebAccessdeployment
    
     $localhost = [System.Net.Dns]::GetHostByName((hostname)).HostName
     
-    if (-not $connectionBroker)   { $connectionBroker = $localhost }
-    if (-not $webAccessServer)    { $webAccessServer  = $localhost }
-
-    if (-not $collectionName)         { $collectionName = "Desktop Collection" }
-    if (-not $collectionDescription)  { $collectionDescription = "A sample RD Session collection up in cloud." }
-
     Node localhost
     {
 
@@ -117,12 +111,6 @@ configuration RDGatewaydeployment
    
     $localhost = [System.Net.Dns]::GetHostByName((hostname)).HostName
  
-    if (-not $connectionBroker)   { $connectionBroker = $localhost }
-    if (-not $webAccessServer)    { $webAccessServer  = $localhost }
-
-    if (-not $collectionName)         { $collectionName = "Desktop Collection" }
-    if (-not $collectionDescription)  { $collectionDescription = "A sample RD Session collection up in cloud." }
-
     Node localhost
     {
 
