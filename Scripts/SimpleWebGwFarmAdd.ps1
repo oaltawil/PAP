@@ -1,9 +1,9 @@
 Param(
         # Connection Broker Computer Name
-        [String]$connectionBroker,
+        [String]$ConnectionBroker,
         
         # Web Access Server Computer Name
-        [String]$webAccessServer,
+        [String]$WebAccessServer,
 
         # Gateway external FQDN
         [String]$externalFqdn
@@ -11,6 +11,6 @@ Param(
 
 Import-Module RemoteDesktop
 
-Add-RdServer -Server $webAccessServer -Role RDS-WEB-ACCESS -ConnectionBroker $connectionBroker
+Add-RdServer -Server $WebAccessServer -Role RDS-WEB-ACCESS -ConnectionBroker $ConnectionBroker
 
-Add-RdServer -Server $webAccessServer -Role RDS-GATEWAY -ConnectionBroker $connectionBroker -GatewayExternalFqdn $externalFqdn
+Add-RdServer -Server $WebAccessServer -Role RDS-GATEWAY -ConnectionBroker $ConnectionBroker -GatewayExternalFqdn $externalFqdn

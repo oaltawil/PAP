@@ -699,7 +699,8 @@
                 "AdminPassword": "[parameters('existingAdminPassword')]"
               },
               "storageAccountName": "[parameters('storageAccountName')]",
-              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'WebAndGwFarmAdd_PostConfig1.1.ps1',' ','-username \"',parameters('existingAdminUserName'),'\" ', '-password \"',parameters('existingAdminPassword'),'\" ','-BrokerServer \"',variables('brokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"','https://', reference(variables('gatewayIpRef')).dnsSettings.fqdn, '/rdweb','\" ','-Domainname \"',parameters('existingDomainName'),'\" ','-numberofwebServers 1',' -ServerName ', variables('gatewayVmName'), ' -vmNameStartIndex 2')]"
+              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'SimpleWebGwFarmAdd.ps1',' -ConnectionBroker \"',variables('brokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"','https://', reference(variables('gatewayIpRef')).dnsSettings.fqdn, '/rdweb','\" ','-WebAccessServer ', variables('SecondaryGatewayVmName'),'.',parameters('existingDomainName'))]"
+              
             }
           }
         }
