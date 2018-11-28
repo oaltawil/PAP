@@ -1,36 +1,36 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "_artifactsLocation": {
+      "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/rds-deployment-existing-ad/"
+    },
     "dnsLabelPrefix": {
-      "value": "nutchi"
+      "value": "{enter_unique_external_fqdn_prefix_here (example:%resourceGroupName%)}"
     },
-  "adDomainName": {
-      "value": "nutchi.local"
+    "existingAdminPassword": {
+      "value": "{enter_existing_adminUsername_password_here}"
     },
-  "adVnetName": {
-      "value": "nutchi.local-vnet"
+    "existingAdminUsername": {
+      "value": "cloudadmin"
     },
-  "adVnetRG": {
-      "value": "nutchi.local-rg"
+    "existingDomainName": {
+      "value": "contoso.com"
     },
-  "adSubnetName": {
-      "value": "default"
+    "existingSubnetName": {
+      "value": "subnet"
     },
-  "adminUsername": {
-      "value": "oaltawil"
+    "existingVnetName": {
+      "value": "vnet"
     },
-  "adminPassword": {
-      "value": "8E*8oGNp8tGLypwn"
-    },
-  "imageSKU": {
+    "imageSKU": {
       "value": "2016-Datacenter"
     },
-  "numberOfRdshInstances": {
+    "numberOfRdshInstances": {
       "value": 2
     },
-  "rdshVmSize": {
-    "value": "Standard_A2_v2"
+    "rdshVmSize": {
+      "value": "Standard_A2"
     }
   }
 }
