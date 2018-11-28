@@ -6,50 +6,43 @@
       "type": "string",
       "metadata": {
         "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'. For example johndns1 will result the final RDWEB access url like https://johndns1.westus.cloudapp.azure.com/RDWeb"
-      },
-      "defaultValue": "nutchi"
+      }
     },
     "existingDomainName": {
       "type": "string",
       "metadata": {
         "description": "The name of the AD domain. For example contoso.com"
-      },
-      "defaultValue": "nutchi.local"
+      }
     },
     "existingVnetRG": {
       "type": "string",
       "metadata": {
           "description": "The Resource Group containing the existing Virtual Network resource"
-      },
-      "defaultValue": "nutchi.local-rg"
+      }
     },
     "existingVnetName": {
       "type": "string",
       "metadata": {
         "description": "The VNET name of AD domain. For example johnvnet1"
-      },
-      "defaultvalue": "nutchi.local-vnet"
+      }
     },
     "existingSubnetName": {
       "type": "string",
       "metadata": {
         "description": "The subnet name of AD domain. For example johnsubnet1"
-      },
-      "defaultValue": "rds"
+      }
     },
     "existingAdminUserName": {
       "type": "string",
       "metadata": {
         "description": "The name of the administrator of the new VM and the domain. Exclusion list: 'administrator'. For example: johnadmin"
-      },
-      "defaultValue": "oaltawil"
+      }
     },
     "existingAdminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "The password for the administrator account of the new VM and the domain"
-      },
-      "defaultValue": "8E*8oGNp8tGLypwn"
+      }
     },
     "imageSKU": {
       "type": "string",
@@ -90,13 +83,6 @@
       },
       "defaultValue": "Standard_D2_v3"
     },
-    "storageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "The size of the Broker VM"
-      },
-      "defaultValue": "nutchirds"
-    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -120,19 +106,9 @@
     "secondaryGatewayNicName": "[concat(variables('secondaryGatewayVmName'),variables('networkNameSuffix'))]",
     "gatewayIpRef": "gwpip",
     "networkNameSuffix": "-nic",
-    "vmPrefix": "",
-    "storageAccountType": "Standard_LRS"
+    "vmPrefix": ""
   },
   "resources": [
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[parameters('storageAccountName')]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "[variables('storageAccountType')]"
-      }
-    },
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/publicIPAddresses",
@@ -698,7 +674,6 @@
               "Items": {
                 "AdminPassword": "[parameters('existingAdminPassword')]"
               },
-              "storageAccountName": "[parameters('storageAccountName')]",
               "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'WebAndGwFarmAdd_PostConfig1.1.ps1',' ','-username \"',parameters('existingAdminUserName'),'\" ', '-password \"',parameters('existingAdminPassword'),'\" ','-BrokerServer \"',variables('brokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"',reference(variables('gatewayIpRef')).dnsSettings.fqdn,'\" ','-Domainname \"',parameters('existingDomainName'),'\" ','-numberofwebServers 1',' -ServerName ', variables('gatewayVmName'), ' -vmNameStartIndex 2')]"
             }
           }

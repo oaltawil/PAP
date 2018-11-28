@@ -3,25 +3,28 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "_artifactsLocation": {
-      "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/rds-deployment-existing-ad/"
+      "value": "https://raw.githubusercontent.com/oaltawil/PAP/master"
     },
     "dnsLabelPrefix": {
-      "value": "{enter_unique_external_fqdn_prefix_here (example:%resourceGroupName%)}"
+      "value": "nutchi"
     },
     "existingAdminPassword": {
-      "value": "{enter_existing_adminUsername_password_here}"
+      "value": "8E*8oGNp8tGLypwn"
     },
     "existingAdminUsername": {
-      "value": "cloudadmin"
+      "value": "oaltawil"
     },
     "existingDomainName": {
-      "value": "contoso.com"
+      "value": "nutchi.local"
     },
     "existingSubnetName": {
-      "value": "subnet"
+      "value": "rds"
     },
     "existingVnetName": {
-      "value": "vnet"
+      "value": "nutchi.local-vnet"
+    },
+    "existingVnetRG": {
+      "value": "nutchi.local-rg"
     },
     "imageSKU": {
       "value": "2016-Datacenter"
@@ -30,7 +33,13 @@
       "value": 2
     },
     "rdshVmSize": {
-      "value": "Standard_A2"
+      "value": "Standard_D2_v3"
+    },
+    "gatewayVmSize": {
+      "value": "Standard_D2_v3"
+    },
+    "brokerVmSize": {
+      "value": "Standard_D2_v3"
     }
   }
 }
