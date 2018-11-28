@@ -691,7 +691,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "[concat(parameters('_artifactsLocation'),'/Scripts/WebAndGwFarmAdd_PostConfig1.1.ps1')]"
+                "[concat(parameters('_artifactsLocation'),'/Scripts/SimpleWebAndGwFarmAdd.ps1')]"
               ]
             },
             "protectedSettings": {
@@ -699,8 +699,7 @@
                 "AdminPassword": "[parameters('existingAdminPassword')]"
               },
               "storageAccountName": "[parameters('storageAccountName')]",
-              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'SimpleWebGwFarmAdd.ps1',' -ConnectionBroker \"',variables('brokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"','https://', reference(variables('gatewayIpRef')).dnsSettings.fqdn, '/rdweb','\" ','-WebAccessServer ', variables('SecondaryGatewayVmName'),'.',parameters('existingDomainName'))]"
-              
+              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'SimpleWebAndGwFarmAdd.ps1',' -ConnectionBroker \"',variables('brokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"','https://', reference(variables('gatewayIpRef')).dnsSettings.fqdn, '/rdweb','\" ','-WebAccessServer ', variables('secondaryGatewayVmName'),'.',parameters('existingDomainName'))]"
             }
           }
         }
