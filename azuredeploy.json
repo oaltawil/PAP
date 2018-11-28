@@ -94,7 +94,6 @@
   "variables": {
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
-    "dnsServerPrivateIp": "10.0.1.4",
     "subnet-id": "[concat(resourceId(parameters('existingVnetRG'),'Microsoft.Network/virtualNetworks',parameters('existingVnetName')),'/subnets/',parameters('existingSubnetName'))]",
     "rdshVmName": "[concat(variables('vmPrefix'), 'rdsh-')]",
     "brokerVmName": "[concat(variables('vmPrefix'), 'rdcb-01')]",
