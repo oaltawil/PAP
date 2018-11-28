@@ -6,7 +6,7 @@ param
      [String]$Domainname,
      [String]$username,
      [String]$password,
-     [string]$ServerName,
+     [string]$ServerName = "gateway",
      [int]$vmNameStartIndex,
      [int]$numberofwebServers,
      $validationKey64,
@@ -45,6 +45,12 @@ configuration RDWebAccessdeployment
    
     $localhost = [System.Net.Dns]::GetHostByName((hostname)).HostName
     
+    if (-not $connectionBroker)   { $connectionBroker = $localhost }
+    if (-not $webAccessServer)    { $webAccessServer  = $localhost }
+
+    if (-not $collectionName)         { $collectionName = "Desktop Collection" }
+    if (-not $collectionDescription)  { $collectionDescription = "A sample RD Session collection up in cloud." }
+
     Node localhost
     {
 
@@ -102,7 +108,18 @@ configuration RDGatewaydeployment
         [String]$webAccessServer,
 
         # Gateway external FQDN
-        [String]$externalFqdn
+        [String]$externalFqdn,
+        
+        # RD Session Host count and naming prefix
+        [Int]$numberOfRdshInstances = 1,
+        [String]$sessionHostNamingPrefix = "SessionHost",
+
+        # Collection Name
+        [String]$collectionName,
+
+        # Connection Description
+        [String]$collectionDescription
+
       ) 
 
 
@@ -111,6 +128,12 @@ configuration RDGatewaydeployment
    
     $localhost = [System.Net.Dns]::GetHostByName((hostname)).HostName
  
+    if (-not $connectionBroker)   { $connectionBroker = $localhost }
+    if (-not $webAccessServer)    { $webAccessServer  = $localhost }
+
+    if (-not $collectionName)         { $collectionName = "Desktop Collection" }
+    if (-not $collectionDescription)  { $collectionDescription = "A sample RD Session collection up in cloud." }
+
     Node localhost
     {
 
@@ -156,7 +179,7 @@ Write-Host "Username : $($username),   Password: $($password)"
 #$cred = New-Object System.Management.Automation.PSCredential -ArgumentList @($username,(ConvertTo-SecureString -String $password -AsPlainText -Force))
 $webServernameArray = New-Object System.Collections.ArrayList
 
-for ($i = $vmNameStartIndex; $i -lt ($numberofwebServers + $vmNameStartIndex); $i++)
+for ($i = $vmNameStartIndex; $i -le ($numberofwebServers + $vmNameStartIndex); $i++)
 { 
     $webServername = $ServerName + $i.ToString("D2")
     #Write-Host "For $($i), servername = $($webServername)"
