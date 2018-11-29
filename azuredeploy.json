@@ -96,8 +96,11 @@
     "imageOffer": "WindowsServer",
     "subnet-id": "[concat(resourceId(parameters('existingVnetRG'),'Microsoft.Network/virtualNetworks',parameters('existingVnetName')),'/subnets/',parameters('existingSubnetName'))]",
     "rdshVmName": "[concat(variables('vmPrefix'), 'rdsh-')]",
-    "brokerVmName": "[concat(variables('vmPrefix'), 'rdcb-01')]",
-    "brokerNicName": "[concat(variables('brokerVmName'),variables('networkNameSuffix'))]",
+    "brokerVmName": "[concat(variables('vmPrefix'), 'rdcb-')]",
+    "primaryBrokerVmName": "[concat(variables('brokerVmName'), '01')]",
+    "primaryBrokerNicName": "[concat(variables('primaryBrokerVmName'), variables('networkNameSuffix'))]",
+    "secondaryBrokerVmName": "[concat(variables('brokerVmName'), '02')]",
+    "secondaryBrokerNicName": "[concat(variables('secondaryBrokerVmName'),variables('networkNameSuffix'))]",
     "gatewayVmName": "[concat(variables('vmPrefix'), 'rdgw-')]",
     "primaryGatewayVmName": "[concat(variables('gatewayVmName'), '01')]",
     "primaryGatewayNicName": "[concat(variables('primaryGatewayVmName'),variables('networkNameSuffix'))]",
@@ -281,7 +284,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('brokerNicName')]",
+      "name": "[variables('primaryBrokerNicName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "Microsoft.Network/loadBalancers/loadBalancer"
@@ -491,11 +494,11 @@
     {
       "apiVersion": "2018-06-01",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[variables('brokerVmName')]",
+      "name": "[variables('primaryBrokerVmName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/availabilitySets', 'cb-availabilityset')]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('brokerNicName'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('primaryBrokerNicName'))]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -505,7 +508,7 @@
           "id": "[resourceId('Microsoft.Compute/availabilitySets', 'cb-availabilityset')]"
         },
         "osProfile": {
-          "computerName": "[variables('brokerVmName')]",
+          "computerName": "[variables('primaryBrokerVmName')]",
           "adminUsername": "[parameters('existingAdminUserName')]",
           "adminPassword": "[parameters('existingAdminPassword')]"
         },
@@ -517,7 +520,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(variables('brokerVmName'), '_OSDisk')]",
+            "name": "[concat(variables('primaryBrokerVmName'), '_OSDisk')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -528,7 +531,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('brokerNicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('primaryBrokerNicName'))]"
             }
           ]
         }
@@ -536,11 +539,11 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('brokerVmName'),'/rdsdeployment')]",
+      "name": "[concat(variables('primaryBrokerVmName'),'/rdsdeployment')]",
       "apiVersion": "2018-06-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', variables('brokerVmName'))]",
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('primaryBrokerVmName'))]",
         "[concat('Microsoft.Compute/virtualMachines/',variables('primaryGatewayVmName'),'/extensions/gateway')]",
         "rdsh-vm-loop"
       ],
@@ -557,7 +560,7 @@
               "UserName": "[parameters('existingAdminUserName')]",
               "Password": "PrivateSettingsRef:adminPassword"
             },
-            "connectionBroker": "[concat(variables('brokerVmName'), '.', parameters('existingDomainName'))]",
+            "connectionBroker": "[concat(variables('primaryBrokerVmName'), '.', parameters('existingDomainName'))]",
             "domainName": "[parameters('existingDomainName')]",
             "externalfqdn": "[reference(variables('gatewayIpRef')).dnsSettings.fqdn]",
             "numberOfRdshInstances": "[parameters('numberOfRdshInstances')]",
@@ -657,7 +660,7 @@
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', variables('secondaryGatewayVmName'))]",
             "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'), '/extensions/gateway')]",
-            "[concat('Microsoft.Compute/virtualMachines/', variables('brokerVmName'), '/extensions/rdsdeployment')]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('primaryBrokerVmName'), '/extensions/rdsdeployment')]"
           ],
           "properties": {
             "publisher": "Microsoft.Compute",
@@ -673,7 +676,7 @@
               "Items": {
                 "AdminPassword": "[parameters('existingAdminPassword')]"
               },
-              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'WebAndGwFarmAdd_PostConfig1.1.ps1',' ','-username \"',parameters('existingAdminUserName'),'\" ', '-password \"',parameters('existingAdminPassword'),'\" ','-BrokerServer \"',variables('brokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"',reference(variables('gatewayIpRef')).dnsSettings.fqdn,'\" ','-Domainname \"',parameters('existingDomainName'),'\" ','-numberofwebServers 1',' -ServerName ', variables('gatewayVmName'), ' -vmNameStartIndex 2')]"
+              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'WebAndGwFarmAdd_PostConfig1.1.ps1',' ','-username \"',parameters('existingAdminUserName'),'\" ', '-password \"',parameters('existingAdminPassword'),'\" ','-BrokerServer \"',variables('primaryBrokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"',reference(variables('gatewayIpRef')).dnsSettings.fqdn,'\" ','-Domainname \"',parameters('existingDomainName'),'\" ','-numberofwebServers 1',' -ServerName ', variables('gatewayVmName'), ' -vmNameStartIndex 2')]"
             }
           }
         }
