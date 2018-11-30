@@ -26,9 +26,6 @@
     "existingVnetRG": {
       "value": "nutchi.local-rg"
     },
-    "imageSKU": {
-      "value": "2016-Datacenter"
-    },
     "numberOfRdshInstances": {
       "value": 2
     },
@@ -40,6 +37,30 @@
     },
     "brokerVmSize": {
       "value": "Standard_D2_v3"
+    },
+    "sqlServerName": {
+      "value": "nutchisql"
+    },
+    "sqlServerAdministratorLogin": {
+        "value": "oaltawil"
+    },
+    "sqlServerAdministratorPassword": {
+        "value": "8E*8oGNp8tGLypwn"
+    },
+    "databaseName": {
+        "value": "nutchidb"
+    },
+    "databaseTier": {
+        "value": "Standard"
+    },
+    "databaseSkuName": {
+        "value": "S2"
+    },
+    "clientAccessName": {
+      "value": "nutchipap"
+    },
+    "dnsServer": {
+      "value": "dc01"
     }
   }
 }

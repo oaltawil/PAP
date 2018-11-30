@@ -1,9 +1,0 @@
-"name": "[variables('secondaryBrokerVmName')]",
-"dependsOn": [
-	"[resourceId('Microsoft.Compute/availabilitySets', 'cb-availabilityset')]",
-],
-
-"name": "[concat(variables('secondaryBrokerVmName'),'/ha-broker-configuration')]",
-"dependsOn": [
-	"[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'),'/extensions/WebAndGwFarmAdd_PostConfig1.1')]"
-],

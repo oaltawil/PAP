@@ -1,7 +1,7 @@
 {
-  "itemDisplayName": "RDS farm deployment using existing active directory",
-  "description": "This template creates a RDS farm deployment using existing active directory in same resource group",
-  "summary": "Creates and deploys fully functional RDS farm deployment using existing active directory in same resource group",
-  "githubUsername": "MahendraAgrawal",
-  "dateUpdated": "2016-10-12"
+  "itemDisplayName": "Highly-Available RDS Farm Deployment using Existing Active Directory",
+  "description": "This template creates an RDS Farm Deployment using an existing Active Directory",
+  "summary": "Creates and deploys a highly-available RDS farm consisting of a Load Balancer, 2 RD Session Hosts, 2 RD Gateway Servers, 2 RD Connection Brokers, and a SQL Database",
+  "githubUsername": "oaltawil",
+  "dateUpdated": "2018-12-04"
 }

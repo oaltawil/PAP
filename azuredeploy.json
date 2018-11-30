@@ -11,25 +11,25 @@
     "existingDomainName": {
       "type": "string",
       "metadata": {
-        "description": "The name of the AD domain. For example contoso.com"
+        "description": "Name of the Active Directory domain. For example contoso.com"
       }
     },
     "existingVnetRG": {
       "type": "string",
       "metadata": {
-          "description": "The Resource Group containing the existing Virtual Network resource"
+          "description": "Name of the Resource Group that contains the existing Virtual Network resource"
       }
     },
     "existingVnetName": {
       "type": "string",
       "metadata": {
-        "description": "The VNET name of AD domain. For example johnvnet1"
+        "description": "Name of the Virtual Network that contains the AD domain. For example johnvnet1"
       }
     },
     "existingSubnetName": {
       "type": "string",
       "metadata": {
-        "description": "The subnet name of AD domain. For example johnsubnet1"
+        "description": "The Subnet name; it is recommended to have a dedicated subnet for the RDS Farm. For example johnsubnet1"
       }
     },
     "existingAdminUserName": {
@@ -44,57 +44,97 @@
         "description": "The password for the administrator account of the new VM and the domain"
       }
     },
-    "imageSKU": {
-      "type": "string",
-      "allowedValues": [
-        "2012-R2-Datacenter",
-        "2016-Datacenter"
-      ],
-      "metadata": {
-        "description": "Windows server SKU"
-      },
-      "defaultValue": "2016-Datacenter"
-    },
     "numberOfRdshInstances": {
       "type": "int",
       "metadata": {
-        "description": "Number of RemoteDesktopSessionHosts"
+        "description": "Number of Remote Desktop Session Hosts"
       },
       "defaultValue": 2
     },
     "rdshVmSize": {
       "type": "string",
       "metadata": {
-        "description": "The size of the RDSH VMs"
+        "description": "Size of the RD Session Host VMs"
       },
       "defaultValue": "Standard_D2_v3"
     },
     "gatewayVmSize": {
       "type": "string",
       "metadata": {
-        "description": "The size of the Gateway VM"
+        "description": "Size of the RD Gateway VMs"
       },
       "defaultValue": "Standard_D2_v3"
     },
     "brokerVmSize": {
       "type": "string",
       "metadata": {
-        "description": "The size of the Broker VM"
+        "description": "Size of the RD Broker VMs"
       },
       "defaultValue": "Standard_D2_v3"
+    },
+    "sqlServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the SQL Server"
+      }
+    },
+    "sqlServerAdministratorLogin": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the SQL Server Administrator"
+        }
+    },
+    "sqlServerAdministratorPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password of the SQL Server Administrator"
+        }
+    },
+    "databaseName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the SQL Database that will be used by the Highly-Available Connection Broker Role"
+        }
+    },
+    "databaseTier": {
+        "type": "string",
+        "defaultValue": "Standard",
+        "metadata": {
+          "description": "SQL Database Tier"
+        }
+    },
+    "databaseSkuName": {
+        "type": "string",
+        "defaultValue": "S2",
+        "metadata": {
+          "description": "SQL Database SKU Name"
+        }
+    },
+    "clientAccessName": {
+      "type": "string",
+      "metadata": {
+        "description": "Common name of the Connection Brokers (two DNS entries will be added for this DNS name; one for each Connection Broker IP Address)"
+      }
+    },
+    "dnsServer": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the DNS Server; required for adding the DNS entries for the Connection Brokers' Client Access Name"
+      }
     },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
-        "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        "description": "Base URI where artifacts required by this template are located"
       },
       "defaultValue": "https://raw.githubusercontent.com/oaltawil/PAP/master"
     }
   },
   "variables": {
-    "imagePublisher": "MicrosoftWindowsServer",
-    "imageOffer": "WindowsServer",
     "subnet-id": "[concat(resourceId(parameters('existingVnetRG'),'Microsoft.Network/virtualNetworks',parameters('existingVnetName')),'/subnets/',parameters('existingSubnetName'))]",
+    "gatewayIpRef": "gwpip",
+    "networkNameSuffix": "-nic",
+    "vmPrefix": "",
     "rdshVmName": "[concat(variables('vmPrefix'), 'rdsh-')]",
     "brokerVmName": "[concat(variables('vmPrefix'), 'rdcb-')]",
     "primaryBrokerVmName": "[concat(variables('brokerVmName'), '01')]",
@@ -106,9 +146,25 @@
     "primaryGatewayNicName": "[concat(variables('primaryGatewayVmName'),variables('networkNameSuffix'))]",
     "secondaryGatewayVmName": "[concat(variables('gatewayVmName'), '02')]",
     "secondaryGatewayNicName": "[concat(variables('secondaryGatewayVmName'),variables('networkNameSuffix'))]",
-    "gatewayIpRef": "gwpip",
-    "networkNameSuffix": "-nic",
-    "vmPrefix": ""
+    "databaseEnableATP": false,
+    "databaseAllowAzureIps": true,
+    "dbConnectionStringToken1": "DRIVER=SQL Server Native Client 11.0;Server=tcp:",
+    "dbConnectionStringToken3": "[concat(',1433;Database=', parameters('databaseName'), ';Uid=', parameters('sqlServerAdministratorLogin'), '@', parameters('sqlServerName'), ';Pwd=', parameters('sqlServerAdministratorPassword'), ';Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;')]",
+    "sqlClientUrl": "http://go.microsoft.com/fwlink/?LinkID=239648&clcid=0x409",
+    "p": {
+      "broker": "[concat(' -existingBroker ', variables('primaryBrokerVmName'))]",
+      "domain": "[concat(' -domainName \"', parameters('existingDomainName'),'\"')]",
+      "user": "[concat(' -username \"', parameters('existingAdminUsername'),'\"')]",
+      "pwd": "[concat(' -password \"', parameters('existingAdminPassword'),'\"')]",
+      "can": "[concat(' -clientAccessName \"', parameters('clientAccessName'), '\"')]",
+      "sqlnclient": "[concat(' -sqlClientUrl \"', variables('sqlClientUrl'), '\"')]",
+      "dnsserver": "[concat(' -dnsServer ', parameters('dnsServer'))]",
+      "sqlserver": "[concat(' -sqlServer \"\"')]",
+      "connstr": "[concat(' -primaryDbConnectionString \"', variables('dbConnectionStringToken1'))]"
+    },
+    "scriptParameters": "[concat(variables('p').broker, variables('p').domain, variables('p').user, variables('p').pwd, variables('p').can, variables('p').sqlnclient, variables('p').dnsserver, variables('p').sqlserver, variables('p').connstr)]",
+    "scriptLocation": "[concat(parameters('_artifactsLocation'), '/Scripts')]",
+    "scriptFileName": "RdcbHaPostConfig.ps1"
   },
   "resources": [
     {
@@ -352,9 +408,9 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[parameters('imageSKU')]",
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2016-Datacenter",
             "version": "latest"
           },
           "osDisk": {
@@ -435,9 +491,9 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[parameters('imageSKU')]",
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2016-Datacenter",
             "version": "latest"
           },
           "osDisk": {
@@ -514,9 +570,9 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[parameters('imageSKU')]",
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2016-Datacenter",
             "version": "latest"
           },
           "osDisk": {
@@ -598,9 +654,9 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[parameters('imageSKU')]",
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2016-Datacenter",
             "version": "latest"
           },
           "osDisk": {
@@ -681,6 +737,192 @@
           }
         }
       ]
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "name": "[parameters('sqlServerName')]",
+      "properties": {
+          "AdministratorLogin": "[parameters('sqlServerAdministratorLogin')]",
+          "AdministratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+          "version": "12.0"
+      },
+      "resources": [
+          {
+              "apiVersion": "2017-10-01-preview",
+              "dependsOn": [
+                  "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+              ],
+              "location": "[resourceGroup().location]",
+              "name": "[parameters('databaseName')]",
+              "properties": {
+                  "collation": "SQL_Latin1_General_CP1_CI_AS",
+                  "maxSizeBytes": 268435456000,
+                  "sampleName": "",
+                  "zoneRedundant": true,
+                  "licenseType": ""
+              },
+              "sku": {
+                  "name": "[parameters('databaseSkuName')]",
+                  "tier": "[parameters('databaseTier')]"
+              },
+              "type": "databases"
+          },
+          {
+              "condition": "[variables('databaseAllowAzureIps')]",
+              "apiVersion": "2014-04-01-preview",
+              "dependsOn": [
+                  "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+              ],
+              "location": "[resourceGroup().location]",
+              "name": "AllowAllWindowsAzureIps",
+              "properties": {
+                  "endIpAddress": "0.0.0.0",
+                  "startIpAddress": "0.0.0.0"
+              },
+              "type": "firewallrules"
+          },
+          {
+              "condition": "[variables('databaseEnableATP')]",
+              "apiVersion": "2017-03-01-preview",
+              "type": "securityAlertPolicies",
+              "name": "Default",
+              "dependsOn": [
+                  "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]",
+                  "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'), '/databases/', parameters('databaseName'))]"
+              ],
+              "properties": {
+                  "state": "Enabled",
+                  "disabledAlerts": [],
+                  "emailAddresses": [],
+                  "emailAccountAdmins": true
+              }
+          }
+      ],
+      "type": "Microsoft.Sql/servers"
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('secondaryBrokerNicName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet-id')]"  
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2018-06-01",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[variables('secondaryBrokerVmName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/availabilitySets', 'cb-availabilityset')]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('secondaryBrokerNicName'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('brokerVmSize')]"
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'cb-availabilityset')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('secondaryBrokerVmName')]",
+          "adminUsername": "[parameters('existingAdminUsername')]",
+          "adminPassword": "[parameters('existingAdminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2016-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[concat(variables('secondaryBrokerVmName'), '_OSDisk')]",
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('secondaryBrokerNicName'))]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2018-06-01",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('secondaryBrokerVmName'),'/configuration')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines',variables('secondaryBrokerVmName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.20",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "modulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
+          "configurationFunction": "Configuration.ps1\\DomainJoin",
+          "properties": {
+            "domainName": "[parameters('existingDomainName')]",
+            "adminCreds": {
+              "UserName": "[parameters('existingAdminUsername')]",
+              "Password": "PrivateSettingsRef:adminPassword"
+            }
+          }
+        },
+        "protectedSettings": {
+          "Items": {
+            "adminPassword": "[parameters('existingAdminPassword')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2018-06-01",
+      "name": "[concat(variables('secondaryBrokerVmName'),'/ha-broker-configuration')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines',variables('secondaryBrokerVmName'))]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/','configuration')]",
+        "[concat('Microsoft.Sql/servers/',parameters('sqlServerName'),'/databases/',parameters('databaseName'))]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'),'/extensions/WebAndGwFarmAdd_PostConfig1.1')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.8",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[concat(variables('scriptLocation'), '/', variables('scriptFileName'))]"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat( 'powershell -noninteractive -executionpolicy bypass -file ', variables('scriptFileName'), variables('scriptParameters'), reference(parameters('sqlServerName')).fullyQualifiedDomainName, variables('dbConnectionStringToken3'), '\"', ' >> script.log 2>&1' )]"
+        }
+      }
     }
   ],
   "outputs": {
@@ -691,6 +933,10 @@
     "rdWebUrl": {
       "type": "string",
       "value": "[concat('https://', reference(variables('gatewayIpRef')).dnsSettings.fqdn, '/rdweb')]"
+    },
+    "connectionstring": {
+      "type": "string",
+      "value": "[concat(variables('dbConnectionStringToken1'), reference(parameters('sqlServerName')).fullyQualifiedDomainName, variables('dbConnectionStringToken3'))]"
     }
   }
 }
