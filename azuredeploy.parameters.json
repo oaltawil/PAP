@@ -6,25 +6,25 @@
       "value": "https://raw.githubusercontent.com/oaltawil/PAP/master"
     },
     "dnsLabelPrefix": {
-      "value": "nutchi"
+      "value": "papgw"
     },
     "existingAdminPassword": {
-      "value": "8E*8oGNp8tGLypwn"
+      "value": "password"
     },
     "existingAdminUsername": {
-      "value": "oaltawil"
+      "value": "cloudadmin"
     },
     "existingDomainName": {
-      "value": "nutchi.local"
+      "value": "contoso.com"
     },
     "existingSubnetName": {
-      "value": "rds"
+      "value": "default"
     },
     "existingVnetName": {
-      "value": "nutchi.local-vnet"
+      "value": "vnet"
     },
     "existingVnetRG": {
-      "value": "nutchi.local-rg"
+      "value": "rg"
     },
     "numberOfRdshInstances": {
       "value": 2
@@ -39,16 +39,16 @@
       "value": "Standard_D2_v3"
     },
     "sqlServerName": {
-      "value": "nutchisql"
+      "value": "paphardcbsql"
     },
     "sqlServerAdministratorLogin": {
-        "value": "oaltawil"
+        "value": "cloudadmin"
     },
     "sqlServerAdministratorPassword": {
-        "value": "8E*8oGNp8tGLypwn"
+        "value": "password"
     },
     "databaseName": {
-        "value": "nutchidb"
+        "value": "paphardcbdb"
     },
     "databaseTier": {
         "value": "Standard"
@@ -57,7 +57,7 @@
         "value": "S2"
     },
     "clientAccessName": {
-      "value": "nutchipap"
+      "value": "pap"
     },
     "dnsServer": {
       "value": "dc01"
