@@ -479,7 +479,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.11",
+            "typeHandlerVersion": "2.20",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -562,7 +562,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.11",
+            "typeHandlerVersion": "2.20",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -643,7 +643,7 @@
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
-        "typeHandlerVersion": "2.11",
+        "typeHandlerVersion": "2.20",
         "autoUpgradeMinorVersion": true,
         "settings": {
           "modulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -725,7 +725,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.11",
+            "typeHandlerVersion": "2.20",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -943,7 +943,6 @@
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines',variables('secondaryBrokerVmName'))]",
         "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/configuration')]",
-        "[concat('Microsoft.Compute/virtualMachines/', variables('primaryBrokerVmName'), '/extensions/rdsdeployment')]",
         "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'),'/extensions/WebAndGwFarmAdd_PostConfig1.1')]"
       ],
       "properties": {
@@ -1000,7 +999,6 @@
       "name": "[concat(variables('primaryBrokerVmName'),'/UpdateRDSCert')]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines',variables('primaryBrokerVmName'))]",
-        "[concat('Microsoft.Compute/virtualMachines/', variables('primaryBrokerVmName'), '/extensions/rdsdeployment')]",
         "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/ha-broker-configuration')]"
       ],
       "location": "[resourceGroup().location]",
