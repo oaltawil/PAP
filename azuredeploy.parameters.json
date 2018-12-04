@@ -56,6 +56,21 @@
     "existingDnsServer": {
       "value": "dc01"
     },
+    "vaultName": {
+        "value": "kv"
+    },
+    "certificateName": {
+        "value": "gwcert"
+    },
+    "applicationId": {
+        "value": "ab129e52-be29-4600-80e1-221672da1739"
+    },
+    "applicationPassword": {
+        "value": "IJLz6N8XoX3FfV/ra48VylLMzZw9VWxuyaFtsLmsggY="
+    },
+    "tenantId": {
+      "value": "dae0dfe3-5a04-43e3-b390-2737374aabc5"
+    },
     "_artifactsLocation": {
       "value": "https://raw.githubusercontent.com/oaltawil/PAP/master"
     }

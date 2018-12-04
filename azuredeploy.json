@@ -115,6 +115,36 @@
         "description": "Name of the DNS Server; required for adding the DNS entries for the Connection Brokers' Client Access Name"
       }
     },
+    "vaultName": {
+      "type": "string",
+      "metadata": {
+          "description": "Name of the Azure Key Vault where the certificate is stored"
+      }
+    },
+    "certificateName": {
+      "type": "string",
+      "metadata": {
+          "description": "Name of the Certificate in the Azure Key Vault"
+      }
+    },
+    "applicationId": {
+      "type": "string",
+      "metadata": {
+          "description": "AD Application Id used to access the certificate"
+      }
+    },
+    "applicationPassword": {
+      "type": "securestring",
+      "metadata": {
+          "description": "AD Application Password"
+      }
+    },
+    "tenantId": {
+      "type": "string",
+      "metadata": {
+          "description": "Tenant Id that contains the Secure Principal Account"
+      }
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -145,7 +175,7 @@
     "dbConnectionStringToken1": "DRIVER=SQL Server Native Client 11.0;Server=tcp:",
     "dbConnectionStringToken3": "[concat(',1433;Database=', parameters('databaseName'), ';Uid=', parameters('sqlServerAdministratorLogin'), '@', parameters('sqlServerName'), ';Pwd=', parameters('sqlServerAdministratorPassword'), ';Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;')]",
     "sqlClientUrl": "http://go.microsoft.com/fwlink/?LinkID=239648&clcid=0x409",
-    "p": {
+    "RdcbHa_P": {
       "broker": "[concat(' -existingBroker ', variables('primaryBrokerVmName'))]",
       "domain": "[concat(' -domainName \"', parameters('existingDomainName'),'\"')]",
       "user": "[concat(' -username \"', parameters('existingAdminUsername'),'\"')]",
@@ -156,9 +186,22 @@
       "sqlserver": "[concat(' -sqlServer \"\"')]",
       "connstr": "[concat(' -primaryDbConnectionString \"', variables('dbConnectionStringToken1'))]"
     },
-    "scriptParameters": "[concat(variables('p').broker, variables('p').domain, variables('p').user, variables('p').pwd, variables('p').can, variables('p').sqlnclient, variables('p').dnsserver, variables('p').sqlserver, variables('p').connstr)]",
-    "scriptLocation": "[concat(parameters('_artifactsLocation'), '/Scripts')]",
-    "scriptFileName": "RdcbHaPostConfig.ps1"
+    "RdcbHa_ScriptParameters": "[concat(variables('RdcbHa_P').broker, variables('RdcbHa_P').domain, variables('RdcbHa_P').user, variables('RdcbHa_P').pwd, variables('RdcbHa_P').can, variables('RdcbHa_P').sqlnclient, variables('RdcbHa_P').dnsserver, variables('RdcbHa_P').sqlserver, variables('RdcbHa_P').connstr)]",
+    "RdcbHa_ScriptLocation": "[concat(parameters('_artifactsLocation'), '/Scripts')]",
+    "RdcbHa_ScriptFileName": "RdcbHaPostConfig.ps1",
+    "UpdateRDSCert_P": {
+      "appid": "[concat(' -appId ', parameters('applicationId'))]",
+      "apppassword": "[concat(' -appPassword ', parameters('applicationPassword'))]",
+      "tenantid": "[concat(' -tenantId ', parameters('tenantId'))]",
+      "vault": "[concat(' -vaultName ', parameters('vaultName'))]",
+      "secret": "[concat(' -secretName ', parameters('certificateName'))]",
+      "adminUsername": "[concat(' -adminUsername ', parameters('existingAdminUsername'))]",
+      "adminPassword": "[concat(' -adminPassword ', parameters('existingAdminPassword'))]",
+      "adDomainName": "[concat(' -adDomainName ', parameters('existingDomainName'))]"
+    },
+    "UpdateRDSCert_ScriptParameters": "[concat(variables('UpdateRDSCert_P').appid, variables('UpdateRDSCert_P').apppassword, variables('UpdateRDSCert_P').tenantid, variables('UpdateRDSCert_P').vault, variables('UpdateRDSCert_P').secret, variables('UpdateRDSCert_P').adminUsername, variables('UpdateRDSCert_P').adminPassword, variables('UpdateRDSCert_P').adDomainName)]",
+    "UpdateRDSCert_ScriptFolder": "Scripts",
+    "UpdateRDSCert_ScriptFileName": "UpdateRDSCertificate.ps1"
   },
   "resources": [
     {
@@ -910,11 +953,38 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[concat(variables('scriptLocation'), '/', variables('scriptFileName'))]"
+            "[concat(variables('RdcbHa_ScriptLocation'), '/', variables('RdcbHa_ScriptFileName'))]"
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat( 'powershell -noninteractive -executionpolicy bypass -file ', variables('scriptFileName'), variables('scriptParameters'), reference(parameters('sqlServerName')).fullyQualifiedDomainName, variables('dbConnectionStringToken3'), '\"', ' >> script.log 2>&1' )]"
+          "commandToExecute": "[concat( 'powershell -noninteractive -executionpolicy bypass -file ', variables('RdcbHa_ScriptFileName'), variables('RdcbHa_ScriptParameters'), reference(parameters('sqlServerName')).fullyQualifiedDomainName, variables('dbConnectionStringToken3'), '\"', ' >> script.log 2>&1' )]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2018-06-01",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('primaryBrokerVmName'),'/UpdateRDSCert')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines',variables('primaryBrokerVmName'))]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/ha-broker-configuration')]"
+      ],
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "Update RDS Certificate Script"
+      },
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.8",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+            "fileUris": [
+                "[concat(parameters('_artifactsLocation'), '/', variables('UpdateRDSCert_ScriptFolder'), '/', variables('UpdateRDSCert_ScriptFileName'))]"
+            ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat( 'powershell -noninteractive -executionpolicy bypass -file ', variables('UpdateRDSCert_ScriptFileName'), variables('UpdateRDSCert_ScriptParameters'), ' >> script.log 2>&1' )]"
         }
       }
     }
