@@ -68,7 +68,7 @@
     "sqlServerName": {
       "type": "string",
       "metadata": {
-        "description": "Name of the SQL Server"
+        "description": "Name of the SQL Server that will host the HA Connection Broker Db"
       }
     },
     "sqlServerAdministratorLogin": {
@@ -479,7 +479,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.20",
+            "typeHandlerVersion": "2.76",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -562,7 +562,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.20",
+            "typeHandlerVersion": "2.76",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -643,7 +643,7 @@
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
-        "typeHandlerVersion": "2.20",
+        "typeHandlerVersion": "2.76",
         "autoUpgradeMinorVersion": true,
         "settings": {
           "modulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -725,7 +725,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.20",
+            "typeHandlerVersion": "2.76",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -796,7 +796,7 @@
                   "collation": "SQL_Latin1_General_CP1_CI_AS",
                   "maxSizeBytes": 268435456000,
                   "sampleName": "",
-                  "zoneRedundant": true,
+                  "zoneRedundant": false,
                   "licenseType": ""
               },
               "sku": {
@@ -915,7 +915,7 @@
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
-        "typeHandlerVersion": "2.20",
+        "typeHandlerVersion": "2.76",
         "autoUpgradeMinorVersion": true,
         "settings": {
           "modulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
@@ -948,11 +948,12 @@
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
-        "typeHandlerVersion": "2.20",
+        "typeHandlerVersion": "2.76",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "modulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip')]",
-          "configurationFunction": "Configuration.ps1\\LicenseServer",
+          "url": "[concat(parameters('_artifactsLocation'),'/Scripts')]",
+          "script": "AddLicenseServer.ps1",
+          "function": "LicenseServer",
           "properties": {
             "domainName": "[parameters('existingDomainName')]",
             "adminCreds": {
