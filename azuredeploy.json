@@ -943,7 +943,8 @@
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines',variables('secondaryBrokerVmName'))]",
         "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/configuration')]",
-        "[concat('Microsoft.Compute/virtualMachines/', variables('primaryBrokerVmName'), '/extensions/rdsdeployment')]"
+        "[concat('Microsoft.Compute/virtualMachines/', variables('primaryBrokerVmName'), '/extensions/rdsdeployment')]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'),'/extensions/WebAndGwFarmAdd_PostConfig1.1')]"
       ],
       "properties": {
         "publisher": "Microsoft.Powershell",
@@ -976,8 +977,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines',variables('secondaryBrokerVmName'))]",
         "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/LicenseServer')]",
-        "[concat('Microsoft.Sql/servers/',parameters('sqlServerName'),'/databases/',parameters('databaseName'))]",
-        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'),'/extensions/WebAndGwFarmAdd_PostConfig1.1')]"
+        "[concat('Microsoft.Sql/servers/',parameters('sqlServerName'),'/databases/',parameters('databaseName'))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -1000,6 +1000,7 @@
       "name": "[concat(variables('primaryBrokerVmName'),'/UpdateRDSCert')]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines',variables('primaryBrokerVmName'))]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('primaryBrokerVmName'), '/extensions/rdsdeployment')]",
         "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/ha-broker-configuration')]"
       ],
       "location": "[resourceGroup().location]",
