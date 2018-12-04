@@ -937,46 +937,12 @@
     },
     {
       "apiVersion": "2018-06-01",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('secondaryBrokerVmName'),'/LicenseServer')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines',variables('secondaryBrokerVmName'))]",
-        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/configuration')]",
-        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'),'/extensions/WebAndGwFarmAdd_PostConfig1.1')]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.76",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "url": "[concat(parameters('_artifactsLocation'),'/Scripts')]",
-          "script": "AddLicenseServer.ps1",
-          "function": "LicenseServer",
-          "properties": {
-            "domainName": "[parameters('existingDomainName')]",
-            "adminCreds": {
-              "UserName": "[parameters('existingAdminUsername')]",
-              "Password": "PrivateSettingsRef:adminPassword"
-            }
-          }
-        },
-        "protectedSettings": {
-          "Items": {
-            "adminPassword": "[parameters('existingAdminPassword')]"
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2018-06-01",
       "name": "[concat(variables('secondaryBrokerVmName'),'/ha-broker-configuration')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines',variables('secondaryBrokerVmName'))]",
-        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryBrokerVmName'),'/extensions/LicenseServer')]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('secondaryGatewayVMName'),'/extensions/WebAndGwFarmAdd_PostConfig1.1')]",
         "[concat('Microsoft.Sql/servers/',parameters('sqlServerName'),'/databases/',parameters('databaseName'))]"
       ],
       "properties": {
