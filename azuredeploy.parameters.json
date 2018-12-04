@@ -2,9 +2,6 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "_artifactsLocation": {
-      "value": "https://raw.githubusercontent.com/oaltawil/PAP/master"
-    },
     "dnsLabelPrefix": {
       "value": "papgw"
     },
@@ -26,9 +23,6 @@
     "existingVnetRG": {
       "value": "rg"
     },
-    "numberOfRdshInstances": {
-      "value": 2
-    },
     "rdshVmSize": {
       "value": "Standard_D2_v3"
     },
@@ -39,7 +33,7 @@
       "value": "Standard_D2_v3"
     },
     "sqlServerName": {
-      "value": "paphardcbsql"
+      "value": "papcbsql"
     },
     "sqlServerAdministratorLogin": {
         "value": "cloudadmin"
@@ -48,7 +42,7 @@
         "value": "password"
     },
     "databaseName": {
-        "value": "paphardcbdb"
+        "value": "papcbdb"
     },
     "databaseTier": {
         "value": "Standard"
@@ -57,10 +51,13 @@
         "value": "S2"
     },
     "clientAccessName": {
-      "value": "pap"
+      "value": "hardcb"
     },
-    "dnsServer": {
+    "existingDnsServer": {
       "value": "dc01"
+    },
+    "_artifactsLocation": {
+      "value": "https://raw.githubusercontent.com/oaltawil/PAP/master"
     }
   }
 }

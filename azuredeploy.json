@@ -44,13 +44,6 @@
         "description": "The password for the administrator account of the new VM and the domain"
       }
     },
-    "numberOfRdshInstances": {
-      "type": "int",
-      "metadata": {
-        "description": "Number of Remote Desktop Session Hosts"
-      },
-      "defaultValue": 2
-    },
     "rdshVmSize": {
       "type": "string",
       "metadata": {
@@ -116,7 +109,7 @@
         "description": "Common name of the Connection Brokers (two DNS entries will be added for this DNS name; one for each Connection Broker IP Address)"
       }
     },
-    "dnsServer": {
+    "existingDnsServer": {
       "type": "string",
       "metadata": {
         "description": "Name of the DNS Server; required for adding the DNS entries for the Connection Brokers' Client Access Name"
@@ -135,6 +128,7 @@
     "gatewayIpRef": "gwpip",
     "networkNameSuffix": "-nic",
     "vmPrefix": "",
+    "numberOfRdshInstances": 2,
     "rdshVmName": "[concat(variables('vmPrefix'), 'rdsh-')]",
     "brokerVmName": "[concat(variables('vmPrefix'), 'rdcb-')]",
     "primaryBrokerVmName": "[concat(variables('brokerVmName'), '01')]",
@@ -158,7 +152,7 @@
       "pwd": "[concat(' -password \"', parameters('existingAdminPassword'),'\"')]",
       "can": "[concat(' -clientAccessName \"', parameters('clientAccessName'), '\"')]",
       "sqlnclient": "[concat(' -sqlClientUrl \"', variables('sqlClientUrl'), '\"')]",
-      "dnsserver": "[concat(' -dnsServer ', parameters('dnsServer'))]",
+      "dnsserver": "[concat(' -dnsServer ', parameters('existingDnsServer'))]",
       "sqlserver": "[concat(' -sqlServer \"\"')]",
       "connstr": "[concat(' -primaryDbConnectionString \"', variables('dbConnectionStringToken1'))]"
     },
@@ -366,7 +360,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "rdsh-nic-loop",
-        "count": "[parameters('numberOfRdshInstances')]"
+        "count": "[variables('numberOfRdshInstances')]"
       },
       "dependsOn": [
         "Microsoft.Network/loadBalancers/loadBalancer"
@@ -471,7 +465,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "rdsh-vm-loop",
-        "count": "[parameters('numberOfRdshInstances')]"
+        "count": "[variables('numberOfRdshInstances')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Compute/availabilitySets', 'rdsh-availabilityset')]",
@@ -619,7 +613,7 @@
             "connectionBroker": "[concat(variables('primaryBrokerVmName'), '.', parameters('existingDomainName'))]",
             "domainName": "[parameters('existingDomainName')]",
             "externalfqdn": "[reference(variables('gatewayIpRef')).dnsSettings.fqdn]",
-            "numberOfRdshInstances": "[parameters('numberOfRdshInstances')]",
+            "numberOfRdshInstances": "[variables('numberOfRdshInstances')]",
             "sessionHostNamingPrefix": "[variables('rdshVmName')]",
             "webAccessServer": "[concat(variables('primaryGatewayVmName'), '.', parameters('existingDomainName'))]"
           }
