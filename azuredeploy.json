@@ -8,12 +8,6 @@
         "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'. For example johndns1 will result the final RDWEB access url like https://johndns1.westus.cloudapp.azure.com/RDWeb"
       }
     },
-    "existingDomainName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the Active Directory domain. For example contoso.com"
-      }
-    },
     "existingVnetRG": {
       "type": "string",
       "metadata": {
@@ -32,6 +26,12 @@
         "description": "The Subnet name; it is recommended to have a dedicated subnet for the RDS Farm. For example johnsubnet1"
       }
     },
+    "existingDomainName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Active Directory domain. For example contoso.com"
+      }
+    },
     "existingAdminUserName": {
       "type": "string",
       "metadata": {
@@ -43,6 +43,13 @@
       "metadata": {
         "description": "The password for the administrator account of the new VM and the domain"
       }
+    },
+    "osDiskType":{
+      "type": "string",
+      "metadata": {
+        "description": "Storage Account Type of the Virtual Machine's Managed Disks"
+      },
+      "defaultValue": "Standard_LRS"
     },
     "rdshVmSize": {
       "type": "string",
@@ -453,7 +460,7 @@
           "osDisk": {
             "name": "[concat(variables('primaryGatewayVmName'), '_OSDisk')]",
             "managedDisk": {
-              "storageAccountType": "Standard_LRS"
+              "storageAccountType": "[parameters('osDiskType')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -536,7 +543,7 @@
           "osDisk": {
             "name": "[concat(variables('rdshVmName'), padLeft(add(copyindex(), 1), 2, '0'), '_OSDisk')]",
             "managedDisk": {
-              "storageAccountType": "Standard_LRS"
+              "storageAccountType": "[parameters('osDiskType')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -615,7 +622,7 @@
           "osDisk": {
             "name": "[concat(variables('primaryBrokerVmName'), '_OSDisk')]",
             "managedDisk": {
-              "storageAccountType": "Standard_LRS"
+              "storageAccountType": "[parameters('osDiskType')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -699,7 +706,7 @@
           "osDisk": {
             "name": "[concat(variables('secondaryGatewayVmName'), '_OSDisk')]",
             "managedDisk": {
-              "storageAccountType": "Standard_LRS"
+              "storageAccountType": "[parameters('osDiskType')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -889,7 +896,7 @@
           "osDisk": {
             "name": "[concat(variables('secondaryBrokerVmName'), '_OSDisk')]",
             "managedDisk": {
-              "storageAccountType": "Standard_LRS"
+              "storageAccountType": "[parameters('osDiskType')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"

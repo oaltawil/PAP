@@ -3,25 +3,28 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "dnsLabelPrefix": {
-      "value": "papgw"
+      "value": "pap1677a"
     },
-    "existingAdminPassword": {
-      "value": "password"
-    },
-    "existingAdminUsername": {
-      "value": "cloudadmin"
-    },
-    "existingDomainName": {
-      "value": "contoso.com"
-    },
-    "existingSubnetName": {
-      "value": "default"
+    "existingVnetRG": {
+      "value": "pap-rg"
     },
     "existingVnetName": {
       "value": "vnet"
     },
-    "existingVnetRG": {
-      "value": "rg"
+    "existingSubnetName": {
+      "value": "default"
+    },
+    "existingDomainName": {
+      "value": "contoso.com"
+    },
+    "existingAdminUsername": {
+      "value": "cloudadmin"
+    },
+    "existingAdminPassword": {
+      "value": "password"
+    },    
+    "osDiskType": {
+      "value": "Standard_LRS"
     },
     "rdshVmSize": {
       "value": "Standard_D2_v3"
@@ -33,16 +36,16 @@
       "value": "Standard_D2_v3"
     },
     "sqlServerName": {
-      "value": "papcbsql"
+      "value": "papsql"
     },
     "sqlServerAdministratorLogin": {
-        "value": "cloudadmin"
+        "value": "sqladmin"
     },
     "sqlServerAdministratorPassword": {
         "value": "password"
     },
     "databaseName": {
-        "value": "papcbdb"
+        "value": "papdb"
     },
     "databaseTier": {
         "value": "Standard"
@@ -54,7 +57,7 @@
       "value": "hardcb"
     },
     "existingDnsServer": {
-      "value": "dc01"
+      "value": "dc-01"
     },
     "vaultName": {
         "value": "kv"
