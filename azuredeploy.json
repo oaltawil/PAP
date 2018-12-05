@@ -777,7 +777,7 @@
     },
     {
       "apiVersion": "2015-05-01-preview",
-      "location": "[resourceGroup().location]",
+      "location": "East US",
       "name": "[parameters('sqlServerName')]",
       "properties": {
           "AdministratorLogin": "[parameters('sqlServerAdministratorLogin')]",
@@ -790,7 +790,7 @@
               "dependsOn": [
                   "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
               ],
-              "location": "[resourceGroup().location]",
+              "location": "East US",
               "name": "[parameters('databaseName')]",
               "properties": {
                   "collation": "SQL_Latin1_General_CP1_CI_AS",
@@ -811,7 +811,7 @@
               "dependsOn": [
                   "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
               ],
-              "location": "[resourceGroup().location]",
+              "location": "East US",
               "name": "AllowAllWindowsAzureIps",
               "properties": {
                   "endIpAddress": "0.0.0.0",

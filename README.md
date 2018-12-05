@@ -2,9 +2,9 @@
 
 This template deploys the following resources:
 
-<ul><li>2 RD Gateway/RD Web Access VMs</li><li>2 RD Connection Broker/RD Licensing Server VMs</li><li>A number of RD Session hosts (number defined by 'numberOfRdshInstances' parameter)</li></ul>
+<ul><li>Azure Load Balancer</li><li>2 RD Web Access / Gateway VMs</li><li>2 RD Connection Broker / Licensing Servers VMs</li><li>2 RD Session Host VMs</li><li>Azure SQL Server and Database (used by the Highly-Available Connection Broker Role)</li></ul>
 
-The template will use existing DC, join all vms to the domain and configure RDS roles in the deployment.
+The template requires a Virtual Network that contains Active Directory Domain Services (managed or unmanaged) and an Azure Key Vault that contains a Certificate (with Private Key) for the External Gateway FQDN.
 
 Click the button below to deploy
 
