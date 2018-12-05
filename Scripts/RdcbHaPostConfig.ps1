@@ -283,7 +283,7 @@ Invoke-Command -ComputerName $dnsServer  -ScriptBlock {
         if ( $res -ne $null ) { 
           Remove-DnsServerResourceRecord -ZoneName $zone -Name $name -RRType "A" -force
         }
-        $cmd = "Add-DnsServerResourceRecordA -ZoneName $zone -Name $name -AllowUpdateAny -Ipv4Address ""$cb1IP"",""$cb2IP"" -PassThru -TimeToLive 00:00:30"
+        $cmd = "Add-DnsServerResourceRecordA -ZoneName $zone -Name $name -AllowUpdateAny -Ipv4Address `"$cb1IP`",`"$cb2IP`" -PassThru -TimeToLive 00:00:30"
         Write-Output($cmd)
         $rec = Invoke-Expression $cmd
         if ($rec -eq $null) 
