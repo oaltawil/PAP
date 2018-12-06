@@ -35,8 +35,7 @@ $NpsExtnConfigSetupPath = "C:\Program Files\Microsoft\AzureMfa\Config\AzureMfaNp
 #
 
 netsh nps add registeredserver $existingDomainName $npsVmName
-# or the same command as above but without the domain name and server name: 
-# netsh nps add registeredserver
+# -OR- netsh nps add registeredserver
 
 #
 # e. Create RADIUS clients for the 2 RD Gateway Servers
@@ -48,14 +47,13 @@ $primaryGatewayVmName, $secondaryGatewayVmName | New-NpsRadiusClient -Name $_  -
 # f. Create a Network Policy to authorize valid connection requests
 #
 
-netsh nps add np name = "RDG_CAP" state = "enable" processingorder = "3" policysource = "0" conditionid = "0x1006" conditiondata = "0 00:00-24:00; 1 00:00-24:00; 2 00:00-24:00; 3 00:00-24:00; 4 00:00-24:00; 5 00:00-24:00; 6 00:00-24:00" profileid = "0x100f" profiledata = "TRUE" profileid = "0x7" profiledata = "0x1" profileid = "0x6" profiledata = "0x2"
+netsh nps add np name = "RDG_CAP" state = "enable" processingorder = "3" policysource = "0" conditionid = "0x1006" conditiondata = "0 00:00-24:00; 1 00:00-24:00; 2 00:00-24:00; 3 00:00-24:00; 4 00:00-24:00; 5 00:00-24:00; 6 00:00-24:00" profileid = "0x102f" advprofiletype = "IPFILTER_IPV4INFILTER" advprofiledata = "PERMIT"
+
 <#
+
 NP-Allow-Dial-in                        0x100f      "TRUE"
 NP-Authentication-Type                  0x1009      "0x3" "0x9" "0x4" "0xa" "0x7"
 Framed-Protocol                         0x7         "0x1"
 Service-Type                            0x6         "0x2"
 
-profileid = "0x100f" profiledata = "TRUE" profileid = "0x7" profiledata = "0x1" profileid = "0x6" profiledata = "0x2"
 #>
-
-
