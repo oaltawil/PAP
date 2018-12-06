@@ -17,7 +17,7 @@ Invoke-WebRequest -Uri $NpsExtnForAzureMfaInstallerURL -OutFile $NpsExtnForAzure
 Start-Process -FilePath $NpsExtnForAzureMfaInstallerPath -ArgumentList "/install /quiet" -WindowStyle Hidden -Wait
 
 #
-# c. Run the Azure MFA NPS Extension Configuration Script
+# c. Automate the Azure MFA NPS Extension Configuration Script (i.e. WITHOUT ANY USER INTERACTION)
 #
 
 $AzureMfaNpsExtnConfigSetupPath = "C:\Program Files\Microsoft\AzureMfa\Config\AzureMfaNpsExtnConfigSetup.ps1"
