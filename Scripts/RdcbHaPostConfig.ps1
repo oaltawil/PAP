@@ -187,7 +187,7 @@ function SetupCB($compName, $clientURL)
 			Invoke-WebRequest -Uri $clientURL -OutFile $installPath -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
 			Write-Output("FinishedDownloading Client and starting install")
             sleep -Seconds 10
-			$result = (Start-Process -FilePath "msiexec.exe" -ArgumentList "/i ""$installPath"" /passive ADDLOCAL=ALL APPGUID={0CC618CE-F36A-415E-84B4-FB1BFF6967E1} IACCEPTSQLNCLILICENSETERMS=YES" -Wait -PassThru).ExitCode
+			$result = (Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$installPath`" /passive ADDLOCAL=ALL APPGUID={0CC618CE-F36A-415E-84B4-FB1BFF6967E1} IACCEPTSQLNCLILICENSETERMS=YES" -Wait -PassThru).ExitCode
 			Write-Output("Result from installing client: $($result)")
 
 			#
