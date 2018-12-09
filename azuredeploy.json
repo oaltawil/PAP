@@ -5,7 +5,7 @@
     "dnsLabelPrefix": {
       "type": "string",
       "metadata": {
-        "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'. For example johndns1 will result the final RDWEB access url like https://johndns1.westus.cloudapp.azure.com/RDWeb"
+        "description": "Unique DNS prefix for the RD Gateway FQDN. The FQDN will look something like '<dnsLabelPrefix>.<existingDomainName>'. For example johndns1 will result in the following RDWEB Access URL:  https://johndns1.contoso.com/RDWeb"
       }
     },
     "existingVnetRG": {
@@ -162,7 +162,6 @@
   },
   "variables": {
     "subnet-id": "[concat(resourceId(parameters('existingVnetRG'),'Microsoft.Network/virtualNetworks',parameters('existingVnetName')),'/subnets/',parameters('existingSubnetName'))]",
-    "gatewayIpRef": "gwpip",
     "networkNameSuffix": "-nic",
     "vmPrefix": "",
     "numberOfRdshInstances": 2,
@@ -212,18 +211,6 @@
   },
   "resources": [
     {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('gatewayIpRef')]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
-        }
-      }
-    },
-    {
       "apiVersion": "2018-06-01",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "gw-availabilityset",
@@ -267,17 +254,16 @@
       "type": "Microsoft.Network/loadBalancers",
       "name": "loadBalancer",
       "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/',variables('gatewayIpRef'))]"
-      ],
+      "dependsOn": [],
       "properties": {
         "frontendIPConfigurations": [
           {
             "name": "LBFE",
             "properties": {
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('gatewayIpRef'))]"
-              }
+              "subnet": {
+                "id": "[variables('subnet-id')]"
+              },
+              "privateIPAllocationMethod": "Dynamic"
             }
           }
         ],
@@ -662,7 +648,7 @@
             },
             "connectionBroker": "[concat(variables('primaryBrokerVmName'), '.', parameters('existingDomainName'))]",
             "domainName": "[parameters('existingDomainName')]",
-            "externalfqdn": "[reference(variables('gatewayIpRef')).dnsSettings.fqdn]",
+            "externalfqdn": "[concat(parameters('dnsLabelPrefix'), '.', parameters('existingDomainName'))]",
             "numberOfRdshInstances": "[variables('numberOfRdshInstances')]",
             "sessionHostNamingPrefix": "[variables('rdshVmName')]",
             "webAccessServer": "[concat(variables('primaryGatewayVmName'), '.', parameters('existingDomainName'))]"
@@ -776,7 +762,7 @@
               "Items": {
                 "AdminPassword": "[parameters('existingAdminPassword')]"
               },
-              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'WebAndGwFarmAdd_PostConfig1.1.ps1',' ','-username \"',parameters('existingAdminUserName'),'\" ', '-password \"',parameters('existingAdminPassword'),'\" ','-BrokerServer \"',variables('primaryBrokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"',reference(variables('gatewayIpRef')).dnsSettings.fqdn,'\" ','-Domainname \"',parameters('existingDomainName'),'\" ','-numberofwebServers 1',' -ServerName ', variables('gatewayVmName'), ' -vmNameStartIndex 2')]"
+              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'WebAndGwFarmAdd_PostConfig1.1.ps1',' ','-username \"',parameters('existingAdminUserName'),'\" ', '-password \"',parameters('existingAdminPassword'),'\" ','-BrokerServer \"',variables('primaryBrokerVmName'),'.',parameters('existingDomainName'),'\" ','-externalFqdn \"', parameters('dnsLabelPrefix'), '.', parameters('existingDomainName'),'\" ','-Domainname \"',parameters('existingDomainName'),'\" ','-numberofwebServers 1',' -ServerName ', variables('gatewayVmName'), ' -vmNameStartIndex 2')]"
             }
           }
         }
@@ -998,11 +984,11 @@
   "outputs": {
     "fqdn": {
       "type": "string",
-      "value": "[reference(variables('gatewayIpRef')).dnsSettings.fqdn]"
+      "value": "[concat(parameters('dnsLabelPrefix'), '.', parameters('existingDomainName'))]"
     },
     "rdWebUrl": {
       "type": "string",
-      "value": "[concat('https://', reference(variables('gatewayIpRef')).dnsSettings.fqdn, '/rdweb')]"
+      "value": "[concat('https://', parameters('dnsLabelPrefix'), '.', parameters('existingDomainName'), '/rdweb')]"
     },
     "connectionstring": {
       "type": "string",

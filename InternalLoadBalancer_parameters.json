@@ -1,0 +1,30 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "dnsLabelPrefix": {
+      "value": "pap1677a"
+    },
+    "existingVnetRG": {
+      "value": "pap-rg"
+    },
+    "existingVnetName": {
+      "value": "vnet"
+    },
+    "existingSubnetName": {
+      "value": "default"
+    },
+    "existingDomainName": {
+      "value": "nutchi.ca"
+    },
+    "existingAdminUsername": {
+      "value": "labadmin"
+    },
+    "existingAdminPassword": {
+      "value": "NyFYX07DiXCVSTdt"
+    },
+    "existingDnsServer": {
+      "value": "dc-01"
+  }
+ }
+}
