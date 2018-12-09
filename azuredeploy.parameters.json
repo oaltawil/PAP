@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "dnsLabelPrefix": {
-      "value": "pap1677a"
+      "value": "rdgateway"
     },
     "existingVnetRG": {
       "value": "pap-rg"
@@ -21,7 +21,7 @@
       "value": "cloudadmin"
     },
     "existingAdminPassword": {
-      "value": "password"
+      "value": "your_password"
     },
     "osDiskType": {
       "value": "Standard_LRS"
@@ -42,7 +42,7 @@
         "value": "sqladmin"
     },
     "sqlServerAdministratorPassword": {
-        "value": "password"
+        "value": "your_password"
     },
     "databaseName": {
         "value": "papdb"
@@ -54,7 +54,7 @@
         "value": "S2"
     },
     "clientAccessName": {
-      "value": "hardcb"
+      "value": "rdbroker"
     },
     "existingDnsServer": {
       "value": "dc-01"
