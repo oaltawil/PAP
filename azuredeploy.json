@@ -277,10 +277,10 @@
             "name": "https",
             "properties": {
               "frontendIPConfiguration": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadbalancer'),'/frontendIPConfigurations/LBFE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/frontendIPConfigurations/LBFE')]"
               },
               "backendAddressPool": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadbalancer'),'/backendAddressPools/LBBAP')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/backendAddressPools/LBBAP')]"
               },
               "protocol": "Tcp",
               "frontendPort": 443,
@@ -289,7 +289,7 @@
               "idleTimeoutInMinutes": 5,
               "loadDistribution": "SourceIPProtocol",
               "probe": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadbalancer'),'/probes/httpsProbe')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/probes/httpsProbe')]"
               }
             }
           },
@@ -297,10 +297,10 @@
             "name": "udp",
             "properties": {
               "frontendIPConfiguration": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadbalancer'),'/frontendIPConfigurations/LBFE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/frontendIPConfigurations/LBFE')]"
               },
               "backendAddressPool": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadbalancer'),'/backendAddressPools/LBBAP')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/backendAddressPools/LBBAP')]"
               },
               "protocol": "Udp",
               "frontendPort": 3391,
@@ -309,7 +309,7 @@
               "idleTimeoutInMinutes": 5,
               "loadDistribution": "SourceIPProtocol",
               "probe": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadbalancer'),'/probes/udpProbe')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/probes/udpProbe')]"
               }
             }
           }
@@ -513,7 +513,7 @@
               ]
             },
             "protectedSettings": {
-              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'RegisterRdGatwayFqdnDns.ps1',' ','-dnsLabelPrefix \"', parameters('dnsLabelPrefix'), '\" ', '-existingDomainName \"',parameters('existingDomainName'), '\" ', '-existingAdminUserName \"', parameters('existingAdminUsername'), '\" ', '-existingAdminPassword \"', parameters('existingAdminPassword'), '\" ', '-existingDnsServer \"', parameters('existingDnsServer'),'\" ','-loadBalancerIP \"', reference('loadbalancer').frontendIPConfigurations[0].properties.privateIPAddress, '\"')]"
+              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'RegisterRdGatwayFqdnDns.ps1',' ','-dnsLabelPrefix \"', parameters('dnsLabelPrefix'), '\" ', '-existingDomainName \"',parameters('existingDomainName'), '\" ', '-existingAdminUserName \"', parameters('existingAdminUsername'), '\" ', '-existingAdminPassword \"', parameters('existingAdminPassword'), '\" ', '-existingDnsServer \"', parameters('existingDnsServer'),'\" ','-loadBalancerIP \"', reference('loadBalancer').frontendIPConfigurations[0].properties.privateIPAddress, '\"')]"
             }
           }
         }
