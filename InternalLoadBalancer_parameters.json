@@ -6,13 +6,13 @@
       "value": "pap1677a"
     },
     "existingVnetRG": {
-      "value": "pap-rg"
+      "value": "nutchi.ca-rg"
     },
     "existingVnetName": {
-      "value": "vnet"
+      "value": "nutchi.ca-vnet"
     },
     "existingSubnetName": {
-      "value": "default"
+      "value": "rds"
     },
     "existingDomainName": {
       "value": "nutchi.ca"

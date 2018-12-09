@@ -5,26 +5,11 @@
     "dnsLabelPrefix": {
       "value": "pap1677a"
     },
-    "existingVnetRG": {
-      "value": "pap-rg"
-    },
-    "existingVnetName": {
-      "value": "vnet"
-    },
-    "existingSubnetName": {
-      "value": "default"
-    },
     "existingDomainName": {
       "value": "nutchi.ca"
     },
-    "existingAdminUsername": {
-      "value": "labadmin"
-    },
-    "existingAdminPassword": {
-      "value": "NyFYX07DiXCVSTdt"
-    },
     "existingDnsServer": {
       "value": "dc-01"
-  }
+    }
  }
 }

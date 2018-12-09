@@ -1,10 +1,8 @@
 param(
-    
-    $existingDomainName = "nutchi.ca",
     $dnsLabelPrefix = "pap",
-    $loadBalancerIP = "10.0.2.50",
-    $existingDnsServer = "dc-01"
-
+    $existingDomainName = "nutchi.ca",
+    $existingDnsServer = "dc-01",
+    $loadBalancerIP = "10.0.2.11"
 )
 
 Write-Output("Creating DNS Record")
@@ -21,11 +19,9 @@ Invoke-Command -ComputerName $existingDnsServer -ScriptBlock {
     }
     else {
     
-        Add-DnsServerResourceRecordA -ZoneName $zone -Name $name -AllowUpdateAny -Ipv4Address $loadBalancerIP -PassThru -TimeToLive 00:00:30 -ErrorAction Stop
+        Add-DnsServerResourceRecordA -ZoneName $zone -Name $name -AllowUpdateAny -Ipv4Address $loadBalancerIP -TimeToLive 00:00:30 -ErrorAction Stop
 
     }
- 
-    Write-Output("Successfully created host (address) record for the Dns Label Prefix of the RD Gateway FQDN")
 
 } -ArgumentList $existingDomainName, $dnsLabelPrefix, $loadBalancerIP
     
