@@ -10,6 +10,12 @@
     },
     "existingDnsServer": {
       "value": "dc-01"
+    },
+    "existingAdminUsername": {
+      "value": "labadmin"
+    },
+    "existingAdminPassword": {
+      "value": "NyFYX07DiXCVSTdt"
     }
- }
+  }
 }

@@ -22,7 +22,7 @@
     },
     "existingAdminPassword": {
       "value": "password"
-    },    
+    },
     "osDiskType": {
       "value": "Standard_LRS"
     },
