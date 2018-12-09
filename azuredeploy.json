@@ -1007,17 +1007,13 @@
     }
   ],
   "outputs": {
-    "fqdn": {
+    "rdGatewayFqdn": {
       "type": "string",
       "value": "[concat(parameters('dnsLabelPrefix'), '.', parameters('existingDomainName'))]"
     },
     "rdWebUrl": {
       "type": "string",
       "value": "[concat('https://', parameters('dnsLabelPrefix'), '.', parameters('existingDomainName'), '/rdweb')]"
-    },
-    "connectionstring": {
-      "type": "string",
-      "value": "[concat(variables('dbConnectionStringToken1'), reference(parameters('sqlServerName')).fullyQualifiedDomainName, variables('dbConnectionStringToken3'))]"
     }
   }
 }
