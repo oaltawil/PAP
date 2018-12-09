@@ -491,6 +491,31 @@
               }
             }
           }
+        },
+        {
+          "name": "[concat(variables('primaryGatewayVMName'),'/RegisterRdGatwayFqdnDns.ps1')]",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2018-06-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('primaryGatewayVmName'))]",
+            "[concat('Microsoft.Compute/virtualMachines/',variables('primaryGatewayVmName'),'/extensions/gateway')]",
+            "Microsoft.Network/loadBalancers/loadBalancer"
+          ],
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.8",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[concat(parameters('_artifactsLocation'),'/Scripts/RegisterRdGatwayFqdnDns.ps1')]"
+              ]
+            },
+            "protectedSettings": {
+              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'RegisterRdGatwayFqdnDns.ps1',' ','-dnsLabelPrefix \"', parameters('dnsLabelPrefix'), '\" ','-existingDomainName \"',parameters('existingDomainName'),'\" ', '-existingAdminUserName \"', parameters('existingAdminUsername'), '\" ', '-existingAdminPassword \"', parameters('existingAdminPassword'), '\" ', '-existingDnsServer \"', parameters('existingDnsServer'),'\" ','-loadBalancerIP \"', reference('loadbalancer').frontendIPConfigurations[0].properties.privateIPAddress, '\"')]"
+            }
+          }
         }
       ]
     },
