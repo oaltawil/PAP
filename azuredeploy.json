@@ -513,7 +513,7 @@
               ]
             },
             "protectedSettings": {
-              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'RegisterRdGatwayFqdnDns.ps1',' ','-dnsLabelPrefix \"', parameters('dnsLabelPrefix'), '\" ','-existingDomainName \"',parameters('existingDomainName'),'\" ', '-existingAdminUserName \"', parameters('existingAdminUsername'), '\" ', '-existingAdminPassword \"', parameters('existingAdminPassword'), '\" ', '-existingDnsServer \"', parameters('existingDnsServer'),'\" ','-loadBalancerIP \"', reference('loadbalancer').frontendIPConfigurations[0].properties.privateIPAddress, '\"')]"
+              "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'RegisterRdGatwayFqdnDns.ps1',' ','-dnsLabelPrefix \"', parameters('dnsLabelPrefix'), '\" ', '-existingDomainName \"',parameters('existingDomainName'), '\" ', '-existingAdminUserName \"', parameters('existingAdminUsername'), '\" ', '-existingAdminPassword \"', parameters('existingAdminPassword'), '\" ', '-existingDnsServer \"', parameters('existingDnsServer'),'\" ','-loadBalancerIP \"', reference('loadbalancer').frontendIPConfigurations[0].properties.privateIPAddress, '\"')]"
             }
           }
         }
