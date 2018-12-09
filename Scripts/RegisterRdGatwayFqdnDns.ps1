@@ -1,12 +1,16 @@
 param(
-    $dnsLabelPrefix = "pap",
-    $existingDomainName = "nutchi.ca",
-    $existingDnsServer = "dc-01",
-    $loadBalancerIP = "10.0.2.11"
+    $dnsLabelPrefix,
+    $existingDomainName,
+    $existingAdminUsername,
+    $existingAdminPassword,
+    $existingDnsServer,
+    $loadBalancerIP
 )
 
+$cred = New-Object System.Management.Automation.PSCredential ("$existingDomainName\$existingAdminUsername", (ConvertTo-SecureString $existingAdminPassword -AsPlainText -Force))
+
 Write-Output("Creating DNS Record")
-Invoke-Command -ComputerName $existingDnsServer -ScriptBlock {
+Invoke-Command -ComputerName $existingDnsServer -Credential $cred -ScriptBlock {
         
     param($existingdomainName, $dnsLabelPrefix, $loadBalancerIP)
         

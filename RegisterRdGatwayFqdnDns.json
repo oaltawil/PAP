@@ -14,6 +14,18 @@
         "description": "Name of the Active Directory domain. For example contoso.com"
       }
     },
+    "existingAdminUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the administrator of the new VM and the domain. Exclusion list: 'administrator'. For example: johnadmin"
+      }
+    },
+    "existingAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password for the administrator account of the new VM and the domain"
+      }
+    },
     "existingDnsServer": {
       "type": "string",
       "metadata": {
@@ -52,7 +64,7 @@
             ]
           },
           "protectedSettings": {
-            "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'RegisterRdGatwayFqdnDns.ps1',' ','-dnsLabelPrefix \"', parameters('dnsLabelPrefix'), '\" ','-existingDomainName \"',parameters('existingDomainName'),'\" ','-existingDnsServer \"',parameters('existingDnsServer'),'\" ','-loadBalancerIP ', variables('loadBalancerIP'))]"
+            "commandToExecute": "[Concat('powershell.exe -ExecutionPolicy Unrestricted -File', ' ', 'RegisterRdGatwayFqdnDns.ps1',' ','-dnsLabelPrefix \"', parameters('dnsLabelPrefix'), '\" ','-existingDomainName \"',parameters('existingDomainName'),'\" ', '-existingAdminUserName \"', parameters('existingAdminUsername'), '\" ', '-existingAdminPassword \"', parameters('existingAdminPassword'), '\" ', '-existingDnsServer \"', parameters('existingDnsServer'),'\" ','-loadBalancerIP ', variables('loadBalancerIP'))]"
           }
         }
       }
